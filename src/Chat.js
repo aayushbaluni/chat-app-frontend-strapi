@@ -2,6 +2,7 @@ import { io } from "socket.io-client";
 import React, { useState, useEffect, useRef } from "react";
 import { Input, Button, List, Typography, Space } from "antd";
 import moment from "moment";
+import './Chat.css'; // Import the CSS file for custom styles
 
 const { Title } = Typography;
 
@@ -25,7 +26,7 @@ const Chat = () => {
       });
 
       socket.current.on("connect", () => {
-        console.log("Connected....")
+        console.log("Connected....");
         if (userInfo && userInfo?.username) {
           socket.current.emit("join", { username: userInfo?.username });
         }
@@ -36,7 +37,7 @@ const Chat = () => {
       });
 
       socket.current.on("history", (data) => {
-        setMessages(data); 
+        setMessages(data);
       });
 
       socket.current.on("disconnect", () => {
@@ -87,9 +88,7 @@ const Chat = () => {
             backgroundColor: isCurrentUser ? "#1890ff" : "#f0f0f0",
             color: isCurrentUser ? "#ffffff" : "#000000",
             padding: "8px",
-            borderRadius: isCurrentUser
-              ? "8px 0 8px 8px"
-              : "0 8px 8px 8px",
+            borderRadius: isCurrentUser ? "8px 0 8px 8px" : "0 8px 8px 8px",
             maxWidth: "75%",
             wordWrap: "break-word",
           }}
@@ -110,18 +109,9 @@ const Chat = () => {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "600px",
-        margin: "auto",
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-      }}
-    >
-      <Title level={2}>Real-time Group Chatting Application</Title>
-      <div style={{ flex: "1", overflowY: "auto" }}>
+    <div className="chat-container">
+      <Title level={2} className="chat-title">Real-time Group Chatting Application</Title>
+      <div className="chat-messages">
         <List
           itemLayout="horizontal"
           dataSource={messages}
@@ -130,10 +120,7 @@ const Chat = () => {
               style={{
                 borderBottom: "none",
                 padding: "8px 0",
-                textAlign:
-                  msg.userId.toString() === userInfo?.id.toString()
-                    ? "right"
-                    : "left",
+                textAlign: msg.userId.toString() === userInfo?.id.toString() ? "right" : "left",
               }}
             >
               <List.Item.Meta
@@ -146,18 +133,16 @@ const Chat = () => {
         />
         <div ref={messagesEndRef} />
       </div>
-      <div style={{ marginTop: "16px", alignSelf: "flex-end", width: "100%" }}>
-        <Space>
-          <Input
-            placeholder="Enter your message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            style={{ width: "300px" }}
-          />
-          <Button type="primary" onClick={handleSendMessage}>
-            Send
-          </Button>
-        </Space>
+      <div className="chat-input-container">
+        <Input
+          placeholder="Enter your message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="chat-input"
+        />
+        <Button type="primary" onClick={handleSendMessage} className="chat-send-button">
+          Send
+        </Button>
       </div>
     </div>
   );
